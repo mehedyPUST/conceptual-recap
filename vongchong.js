@@ -23,7 +23,6 @@ function switchTab(tab) {
     }
 
     const sections = [allContainer, interviewContainer, rejectedContainer];
-
     for (const section of sections) {
         section.classList.add('hidden');
     }
@@ -38,14 +37,14 @@ function switchTab(tab) {
     else if (tab == 'interview') {
         interviewContainer.classList.remove('hidden');
         if (interviewContainer.children.length < 1) {
-            emptyState.classList.remove('hidden', 'border-blue-700');
+            emptyState.classList.remove('hidden');
             emptyState.classList.add('border-green-700');
         }
     }
     else {
         rejectedContainer.classList.remove("hidden");
         if (rejectedContainer.children.length < 1) {
-            emptyState.classList.remove('hidden', 'border-blue-700');
+            emptyState.classList.remove('hidden');
             emptyState.classList.add('border-red-700');
         }
     }
@@ -66,19 +65,15 @@ function updateFilteredContainers() {
     rejectedContainer.innerHTML = '';
 
     const allCards = allContainer.children;
-
     for (let i = 0; i < allCards.length; i++) {
         const card = allCards[i];
         const statusElement = card.querySelector('.status p');
         if (statusElement) {
             const statusText = statusElement.innerText.trim();
-
             if (statusText === 'INTERVIEW') {
-                const clonedCard = card.cloneNode(true);
-                interviewContainer.appendChild(clonedCard);
+                interviewContainer.appendChild(card.cloneNode(true));
             } else if (statusText === 'REJECTED') {
-                const clonedCard = card.cloneNode(true);
-                rejectedContainer.appendChild(clonedCard);
+                rejectedContainer.appendChild(card.cloneNode(true));
             }
         }
     }
@@ -102,30 +97,23 @@ function findCardInAllContainer(jobCard) {
 }
 
 jobsContainer.addEventListener('click', function (event) {
-    clickedElement = event.target;
+    let clickedElement = event.target;
     const jobCard = clickedElement.closest(".job-card");
-    const status = jobCard.querySelector(".status");
 
     if (clickedElement.classList.contains("btn-interview")) {
-        // All container-এ original card খুঁজে তার status আপডেট
         const originalCard = findCardInAllContainer(jobCard);
         if (originalCard) {
-            const originalStatus = originalCard.querySelector(".status");
-            originalStatus.innerHTML = '<p class="bg-green-200 border border-green-300 text-green-500 font-medium py-2 px-4 w-35 rounded-sm text-center">INTERVIEW</p>';
+            originalCard.querySelector(".status").innerHTML = '<p class="bg-green-200 border border-green-300 text-green-500 font-medium py-2 px-4 w-35 rounded-sm text-center">INTERVIEW</p>';
         }
-
         updateFilteredContainers();
         updateCount();
     }
 
     if (clickedElement.classList.contains("btn-rejected")) {
-        // All container-এ original card খুঁজে তার status আপডেট
         const originalCard = findCardInAllContainer(jobCard);
         if (originalCard) {
-            const originalStatus = originalCard.querySelector(".status");
-            originalStatus.innerHTML = '<p class="bg-red-200 border border-red-300 text-red-500 font-medium py-2 px-4 w-35 rounded-sm text-center">REJECTED</p>';
+            originalCard.querySelector(".status").innerHTML = '<p class="bg-red-200 border border-red-300 text-red-500 font-medium py-2 px-4 w-35 rounded-sm text-center">REJECTED</p>';
         }
-
         updateFilteredContainers();
         updateCount();
     }
@@ -135,7 +123,6 @@ jobsContainer.addEventListener('click', function (event) {
         if (originalCard) {
             originalCard.remove();
         }
-
         updateFilteredContainers();
         updateCount();
     }
@@ -159,7 +146,7 @@ function updateCount() {
         }
     }
     else if (currentTab === 'interview') {
-        availableCount.innerText = interviewJobs;
+        availableCount.innerHTML = `${interviewJobs} of ${allJobs}`;
         if (interviewJobs < 1) {
             emptyState.classList.remove('hidden');
         } else {
@@ -167,7 +154,7 @@ function updateCount() {
         }
     }
     else if (currentTab === 'rejected') {
-        availableCount.innerText = rejectedJobs;
+        availableCount.innerHTML = `${rejectedJobs} of ${allJobs}`;
         if (rejectedJobs < 1) {
             emptyState.classList.remove('hidden');
         } else {
